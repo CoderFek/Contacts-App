@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Create Contact</h1>
+
+<form action="" method="post" class="form-control">
+    {% csrf_token %}
+    {{ new_contact.as_p }}
+    <button class="btn btn-primary" type="submit">Save</button>
+</form>
+
+{% endblock content %}
