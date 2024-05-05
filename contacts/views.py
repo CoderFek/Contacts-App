@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
+from django.contrib import messages
 from .models import Contact
+from django.views.decorators.http import require_POST, require_http_methods
 from .forms import ContactForm
 # Create your views here.
 def contact_list(request):
@@ -38,9 +40,12 @@ def contact_details(request, pk):
     contact = get_object_or_404(Contact, pk=pk)
     return render(request, 'contact_details.html', {'contact':contact})
 
+
+@require_http_methods(['DELETE'])
 def contact_delete(request, pk):
     contact = get_object_or_404(Contact, pk=pk)
-    if request.method == 'POST':
-        contact.delete()
-        return redirect('home')
-    return render(request, 'delete_contact.html', {'contact':contact})
+    contact.delete()
+    messages.success(request,'Contact deleted!')
+    response = HttpResponse(status=204)
+    
+    return redirect('home')

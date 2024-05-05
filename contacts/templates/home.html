@@ -2,11 +2,20 @@
 
 {% block content %}
 
+{% if messages %}
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+    {% for message in messages %}
+            {{ message }}
+    {% endfor %}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endif %}
+
 <h1>Contact List</h1>
     <br>
     <!-- Search Form -->
     <form class="input-group input-group-sm mb-3" action="{% url 'home' %}" method="GET">
-        <input class="mx-2" type="text" name="q" placeholder="Search by name">
+        <input class="mx-2" type="text" name="q" placeholder="Search by name" required>
         <button class="btn btn-primary btn-sm" type="submit">Search</button>
         <a class="btn btn-sm btn-secondary" href="{% url 'home' %}">reset</a>
     </form>
@@ -24,12 +33,13 @@
         <tbody>
         {% for contact in contacts %}
             <tr>
-                <td>{{ contact.first_name }}</td>
-                <td>{{ contact.last_name }}</td>
-                <td>{{ contact.phone }}</td>
+                <td id="contact_first_{{contact.id}}">{{ contact.first_name }}</td>
+                <td id="contact_last_{{contact.id}}">{{ contact.last_name }}</td>
+                <td id="contact_phone_{{contact.id}}">{{ contact.phone }}</td>
                 <td><a href="{% url 'contact_edit' pk=contact.id %}">Edit</a>
                     <a href="{% url 'contact_details' pk=contact.id %}">View</a>
-                    <a href="{% url 'contact_delete' pk=contact.id %}">Delete</a>
+                    <button hx-delete="{% url 'contact_delete' pk=contact.id %}"
+                    hx-target="body">Delete</button>
                 </td>
             </tr>
         {% endfor %}
